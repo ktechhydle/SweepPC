@@ -13,7 +13,7 @@ SweepPC provides a simple user interface allowing you to do things like:
 - **Malware Protection 👹** Hunt down those malicious processes hidden from you.
   
 ## Speed
-SweepPC is implemented in Rust, which means it is **FAST** for file management tasks, deleting memory, and processing large amounts of data.
+All file operations and scanning are performed in Rust, while the GUI itself is developed in Python. This means it is **FAST** for file management tasks, deleting memory, and processing large amounts of data, whilst having a clean and efficient user interface.
 
 ## The Plan
 As of right now, SweepPC is still under active development. We plan to release all beta and alpha versions for free, but any stable releases will be available for a one-time payment of $20 on the official MP Software website. Our goal is too stay away from a SaaS approach (no subscription) and release SweepPC for a lifetime payment. 
