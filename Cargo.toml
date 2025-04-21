@@ -3,6 +3,9 @@ name = "SweepPC"
 version = "1.0.0"
 edition = "2024"
 
-[dependencies]
+[lib]
+name = "sweep_pc"
+crate-type = ["cdylib"]
 
-[build-dependencies]
+[dependencies]
+pyo3 = { version = "0.24.0", features = ["extension-module"] }
