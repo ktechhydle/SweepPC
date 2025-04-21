@@ -16,7 +16,7 @@ SweepPC provides a simple user interface allowing you to do things like:
   
 ## Speed
 All file operations and scanning are performed in Rust, while the GUI itself is developed in Python. 
-This means it is **FAST** for file management tasks and processing large amounts of data, whilst having a 
+This means SweepPC is **FAST** for file management tasks and processing large amounts of data, whilst having a 
 clean and efficient user interface.
 
 ## The Plan
