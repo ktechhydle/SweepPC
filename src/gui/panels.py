@@ -24,6 +24,7 @@ class MainPanel(BasePanel):
 
         self.navigator_panel = QWidget(self)
         self.navigator_panel.setLayout(QVBoxLayout())
+        self.navigator_panel.layout().addStretch()
         self.splitter.addWidget(self.navigator_panel)
 
         self.stack = QStackedWidget(self)
@@ -34,6 +35,7 @@ class MainPanel(BasePanel):
     def addPage(self, text: str, widget: QWidget):
         button = QPushButton(text)
         button.setCheckable(True)
+        button.setObjectName('pageButton')
         self._button_group.addButton(button)
         self.navigator_panel.layout().addWidget(button)
 
@@ -50,6 +52,9 @@ class MainPanel(BasePanel):
     def setCurrentPage(self, index: int):
         self.stack.setCurrentIndex(index)
 
+    def finish(self):
+        self.navigator_panel.layout().addStretch()
+
 
 class HomePanel(BasePanel):
     def __init__(self, parent=None):
@@ -62,11 +67,12 @@ class HomePanel(BasePanel):
         label = QLabel('Lets get started with a quick cleanup of your PC.')
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        run_btn = RunButton('Run')
+        run_btn = RunButton('Run', self)
         run_btn.clicked.connect(self.startCleanup)
 
         self.layout().addStretch()
         self.layout().addWidget(label)
+        self.layout().addSpacing(20)
         self.layout().addWidget(run_btn, alignment=Qt.AlignmentFlag.AlignCenter)
 
     def startCleanup(self):

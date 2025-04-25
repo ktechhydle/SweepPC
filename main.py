@@ -18,6 +18,7 @@ class SweepPC(QMainWindow):
 
         self.home_panel = HomePanel(self)
         self.main_panel.addPage('Home', self.home_panel)
+        self.main_panel.finish()
 
 
 def main():
