@@ -1,5 +1,6 @@
-import sweep_pc
 from src.imports import *
+from src.gui.widgets import RunButton
+import sweep_pc
 
 
 class BasePanel(QWidget):
@@ -11,6 +12,7 @@ class MainPanel(BasePanel):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setLayout(QHBoxLayout())
+        self.layout().setContentsMargins(0, 0, 0, 0)
 
         self._current_widget = None
         self._button_group = QButtonGroup(self)
@@ -18,13 +20,16 @@ class MainPanel(BasePanel):
         self.createUI()
 
     def createUI(self):
+        self.splitter = QSplitter(self)
+
         self.navigator_panel = QWidget(self)
-        self.navigator_panel.setFixedWidth(200)
         self.navigator_panel.setLayout(QVBoxLayout())
-        self.layout().addWidget(self.navigator_panel)
+        self.splitter.addWidget(self.navigator_panel)
 
         self.stack = QStackedWidget(self)
-        self.layout().addWidget(self.stack)
+        self.splitter.addWidget(self.stack)
+
+        self.layout().addWidget(self.splitter)
 
     def addPage(self, text: str, widget: QWidget):
         button = QPushButton(text)
@@ -57,13 +62,12 @@ class HomePanel(BasePanel):
         label = QLabel('Lets get started with a quick cleanup of your PC.')
         label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        run_btn = QPushButton('Run')
-        run_btn.setObjectName('#runButton')
+        run_btn = RunButton('Run')
         run_btn.clicked.connect(self.startCleanup)
 
         self.layout().addStretch()
         self.layout().addWidget(label)
-        self.layout().addWidget(run_btn)
+        self.layout().addWidget(run_btn, alignment=Qt.AlignmentFlag.AlignCenter)
 
     def startCleanup(self):
         pass
