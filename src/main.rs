@@ -15,9 +15,9 @@ fn main() {
         let command: &Vec<&str> = &input.trim().split(' ').collect();
 
         if command.len() > 0 {
-            if command[0] == "exit".to_string() {
+            if command[0] == "exit" {
                 break;
-            } else if command[0] == "help".to_string() {
+            } else if command[0] == "help" {
                 println!("usage: [command] ... [arg]");
                 println!("  help: see this again");
                 println!("  exit: exit sweeppc");
