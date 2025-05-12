@@ -6,24 +6,44 @@ fn main() {
 
     loop {
         let mut input: String = String::new();
-        print!("> ");
+        print!(">>> ");
 
         let _ = stdout().flush();
 
         stdin().read_line(&mut input).expect("Not a valid command");
 
-        if &input.trim().to_string() == "exit" {
-            break;
-        } else if &input.trim().to_string() == "help" {
-            println!("usage: [command] ... [arg]");
-            println!("  help: see this again");
-            println!("  exit: exit sweeppc");
-            println!("  trim: clean up memory");
-            println!("  clean [arg]: clean up the specified argument");
-            println!("      [arg] temp: clean up temp/cache dirs");
-            println!("      [arg] old: clean up old and large files dirs");
-        } else {
-            println!("Not a valid command.");
+        let command: &Vec<&str> = &input.trim().split(' ').collect();
+
+        if command.len() > 0 {
+            if command[0] == "exit".to_string() {
+                break;
+            } else if command[0] == "help".to_string() {
+                println!("usage: [command] ... [arg]");
+                println!("  help: see this again");
+                println!("  exit: exit sweeppc");
+                println!("  trim: clean up memory");
+                println!("  scan [arg]: scan the specified target");
+                println!("      [arg] temp: scan for temp/cache dirs");
+                println!("      [arg] old: scan for old and large files");
+                println!("      [arg] danger: scan for malicious process");
+                println!("  clean [arg]: clean up the specified target");
+                println!("      [arg] temp: clean up temp/cache dirs");
+                println!("      [arg] old: clean up old and large files dirs");
+            } else if command[0] == "scan" {
+                if command.len() > 1 {
+                } else {
+                    println!("\n");
+                    println!("usage: scan [arg]");
+                    println!("  [arg] temp: scan for temp/cache dirs");
+                    println!("  [arg] old: scan for old and large files");
+                    println!("  [arg] danger: scan for malicious process");
+                    println!("\n");
+                }
+            } else {
+                println!("\n");
+                println!("'{}' is not a valid command.", command[0]);
+                println!("\n");
+            }
         }
     }
 }
