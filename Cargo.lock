@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "sweep_pc"
+name = "sweeppc"
 version = "1.0.0"
