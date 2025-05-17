@@ -30,7 +30,23 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
     Ok(results)
 }
 
-pub fn scan_all() -> Vec<String> {
+pub fn scan_temps() -> io::Result<Vec<String>> {
+    let mut results = Vec::new();
+    let dir = dirs::cache_dir();
+
+    match dir {
+        Some(temp_dir) => {
+
+        }
+        None => {
+            eprintln!("SweepPC could't find a temp/cache dir.")
+        }
+    }
+
+    Ok(results)
+}
+
+pub fn scan_all() -> io::Result<Vec<String>> {
     let mut combined_results = Vec::new();
 
     let sources = [
@@ -44,10 +60,10 @@ pub fn scan_all() -> Vec<String> {
 
     for result in sources {
         match result {
-            Ok(mut vec) => combined_results.append(&mut vec),
-            Err(e) => eprintln!("Error scanning directory: {}", e),
+            Ok(mut files) => combined_results.append(&mut files),
+            Err(e) => return Err(e),
         }
     }
 
-    combined_results
+    Ok(combined_results)
 }

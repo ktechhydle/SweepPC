@@ -1,6 +1,5 @@
 use std::env;
-use sweeppc::{run_cleanup, run_cleanup_on_dir};
-mod indexing;
+use sweeppc::{run_cleanup, run_cleanup_on_dir, run_cleanup_on_temp};
 
 fn main() {
     let args = env::args();
@@ -16,6 +15,8 @@ fn main() {
             } else {
                 println!("Usage: runtarget [dirname]")
             }
+        } else if commands[1] == "cleantemp" {
+            run_cleanup_on_temp();
         }
     } else {
         println!("SweepPC Version 1.0");
