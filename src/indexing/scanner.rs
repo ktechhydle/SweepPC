@@ -1,26 +1,30 @@
+use dirs;
 use std::fs;
 use std::io;
 use walkdir::WalkDir;
 
-pub fn scan_large_and_old_files(dir: &str) -> io::Result<Vec<String>> {
+pub fn scan_large_and_old_files() -> io::Result<Vec<String>> {
     let mut results = Vec::new();
+    let user_dir = dirs::home_dir();
 
-    for entry in WalkDir::new(dir).into_iter().filter_map(Result::ok) {
-        let path = entry.path();
+    match user_dir {
+        Some(home_dir) => {
+            println!("Searching {:?}", &home_dir);
 
-        if path.is_file() {
-            let file_name = match path.to_str() {
-                Some(name) => name.to_string(),
-                None => continue, // skip paths that aren't valid UTF-8
-            };
+            for entry in WalkDir::new(&home_dir) {
+                let path = entry?.path().to_path_buf();
+                let metadata = path.metadata()?;
+                let max_size = 100 * 1000 * 1000;
 
-            let metadata = fs::metadata(path)?;
-            let length = metadata.len();
-            let max_size = 100 * 1000 * 1000; // 100mb
-
-            if length > max_size {
-                results.push(file_name);
+                if metadata.len() > max_size {
+                    if let Some(path_str) = path.to_str() {
+                        results.push(path_str.to_string());
+                    }
+                }
             }
+        }
+        None => {
+            println!("I couldn't find a user directory to search :(")
         }
     }
 
