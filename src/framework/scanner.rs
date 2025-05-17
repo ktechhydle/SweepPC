@@ -1,3 +1,4 @@
+use std::env;
 use std::fs;
 use std::io;
 use std::path::PathBuf;
@@ -32,29 +33,22 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
 
 pub fn scan_temps() -> io::Result<Vec<String>> {
     let mut results = Vec::new();
-    let dir = dirs::cache_dir();
+    let temp_dir = env::temp_dir();
 
-    match dir {
-        Some(temp_dir) => {
-            for entry in WalkDir::new(&temp_dir) {
-                match entry {
-                    Ok(entry) => {
-                        let path = entry.path().to_path_buf();
-                        if let Some(file_name) = path.to_str() {
-                            results.push(file_name.to_string());
-                        } else {
-                            eprintln!("SweepPC Unknown Error");
-                        }
-                    }
-                    Err(err) => {
-                        eprintln!("Error scanning file: {}", err);
-                        continue;
-                    }
+    for entry in WalkDir::new(&temp_dir) {
+        match entry {
+            Ok(entry) => {
+                let path = entry.path().to_path_buf();
+                if let Some(file_name) = path.to_str() {
+                    results.push(file_name.to_string());
+                } else {
+                    eprintln!("SweepPC Unknown Error");
                 }
             }
-        }
-        None => {
-            eprintln!("SweepPC couldn't find a temp/cache dir.");
+            Err(err) => {
+                eprintln!("Error scanning file: {}", err);
+                continue;
+            }
         }
     }
 

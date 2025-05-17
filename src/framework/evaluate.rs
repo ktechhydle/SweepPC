@@ -10,15 +10,7 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
                 let mut displayed_results = String::new();
 
                 for result in &found_files {
-                    let path = Path::new(result);
-                    let file_name = path.file_name();
-
-                    match file_name.unwrap().to_str() {
-                        Some(basename) => {
-                            displayed_results.push_str(&format!("File: {}\n", basename.to_string()))
-                        }
-                        None => {}
-                    }
+                    displayed_results.push_str(&format!("File: {}\n", result));
                 }
 
                 if !displayed_results.is_empty() {
