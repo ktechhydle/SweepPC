@@ -1,4 +1,6 @@
+use crate::indexing::scanner::scan_large_and_old_files;
 use std::io::{stdin, stdout, Write};
+mod indexing;
 
 fn main() {
     println!("Welcome to SweepPC. Let's clean your computer!");
@@ -31,6 +33,14 @@ fn main() {
                 println!("      [arg] old: clean up old and large files dirs");
             } else if command[0] == "scan" {
                 if command.len() > 1 {
+                    if command[1] == "old" {
+                        let desktop_results = scan_large_and_old_files(
+                            dirs::desktop_dir().unwrap().to_str().expect("Error"),
+                        )
+                        .expect("Error");
+
+                        println!("{:?}", desktop_results)
+                    }
                 } else {
                     println!("\n");
                     println!("usage: scan [arg]");
