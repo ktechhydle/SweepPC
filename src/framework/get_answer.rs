@@ -1,8 +1,9 @@
 use std::io::{self, Write};
+use colored::Colorize;
 
 pub fn get_yes_or_no(prompt: &str) -> bool {
     loop {
-        print!("{} (y/n): ", prompt);
+        print!("🤔 {} (y/n): ", prompt.bold().italic());
         io::stdout().flush().unwrap();
 
         let mut input = String::new();

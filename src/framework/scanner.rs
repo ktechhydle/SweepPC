@@ -2,29 +2,38 @@ use std::env;
 use std::fs;
 use std::io;
 use std::path::PathBuf;
+use colored::Colorize;
 use walkdir::WalkDir;
 
 pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>> {
     let mut results = Vec::new();
 
     match dir {
-        Some(home_dir) => {
-            println!("Searching {:?}", &home_dir);
+        Some(dir_path) => {
+            println!("{} {:?} 🔎", "Searching".white(), &dir_path);
 
-            for entry in WalkDir::new(&home_dir) {
-                let path = entry?.path().to_path_buf();
-                let metadata = fs::metadata(&path)?;
-                let max_size = 100 * 1000 * 1000;
+            for entry in WalkDir::new(&dir_path) {
+                match entry {
+                    Ok(entry) => {
+                        let path = entry.path();
+                        let metadata = fs::metadata(&path)?;
+                        let max_size = 100 * 1000 * 1000;
 
-                if metadata.len() > max_size {
-                    if let Some(path_str) = path.to_str() {
-                        results.push(path_str.to_string());
+                        if metadata.len() > max_size {
+                            if let Some(path_str) = path.to_str() {
+                                results.push(path_str.to_string());
+                            }
+                        }
+                    }
+                    Err(err) => {
+                        eprintln!("{} {}", "Error scanning file:".red(), err.to_string().red());
+                        continue;
                     }
                 }
             }
         }
         None => {
-            eprintln!("I couldn't find the specified directory to search :(")
+            eprintln!("{} 😔", "I couldn't find the specified directory to search".red());
         }
     }
 
@@ -42,11 +51,11 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
                 if let Some(file_name) = path.to_str() {
                     results.push(file_name.to_string());
                 } else {
-                    eprintln!("SweepPC Unknown Error");
+                    eprintln!("{} ❌", "SweepPC Unknown Error".red());
                 }
             }
             Err(err) => {
-                eprintln!("Error scanning file: {}", err);
+                eprintln!("{} {}", "Error scanning file:".red(), err.to_string().red());
                 continue;
             }
         }

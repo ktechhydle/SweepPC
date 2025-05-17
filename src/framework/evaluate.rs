@@ -1,7 +1,7 @@
-use crate::framework;
-use std::fs;
 use std::io;
-use std::path::Path;
+use std::fs;
+use colored::Colorize;
+use crate::framework;
 
 pub fn evaluate_results(results: io::Result<Vec<String>>) {
     match results {
@@ -10,12 +10,13 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
                 let mut displayed_results = String::new();
 
                 for result in &found_files {
-                    displayed_results.push_str(&format!("File: {}\n", result));
+                    displayed_results.push_str(&format!("{} {}\n", "File:".italic().cyan(), result));
                 }
 
                 if !displayed_results.is_empty() {
                     println!(
-                        "SweepPC found the following results: \n\n{}",
+                        "{} \n\n{}",
+                        "SweepPC found the following results:".white().green(),
                         displayed_results
                     );
 
@@ -27,13 +28,13 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
                         for file in found_files {
                             let _ = fs::remove_file(file);
                         }
-                        println!("Deleted found files");
+                        println!("{}", "Deleted found files".green());
                     }
                 }
             } else {
-                println!("SweepPC didn't find any files, your computer is clean!")
+                println!("{}", "SweepPC didn't find any files, your computer is clean 😊".white())
             }
         }
-        Err(e) => eprintln!("Error scanning directory: {}", e),
+        Err(e) => eprintln!("{} {}", "Error scanning directory:".red(), e),
     }
 }
