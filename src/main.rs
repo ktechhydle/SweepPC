@@ -20,9 +20,11 @@ fn main() {
         }
     } else {
         println!("SweepPC Version 1.0");
-        println!("Usage: sweeppc [command] ... [arg]\n");
+        println!("See https://github.com/ktechhydle/SweepPC for command usage\n");
+        println!("Usage -> sweeppc [command] ... [arg]");
         println!("Commands:");
         println!("  run             Run a default cleanup");
         println!("  runtarget [dir] Run a cleanup on a specific directory");
+        println!("  cleantemp       Cleanup temp files and caches");
     }
 }

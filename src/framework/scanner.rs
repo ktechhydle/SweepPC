@@ -36,10 +36,25 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
 
     match dir {
         Some(temp_dir) => {
-
+            for entry in WalkDir::new(&temp_dir) {
+                match entry {
+                    Ok(entry) => {
+                        let path = entry.path().to_path_buf();
+                        if let Some(file_name) = path.to_str() {
+                            results.push(file_name.to_string());
+                        } else {
+                            eprintln!("SweepPC Unknown Error");
+                        }
+                    }
+                    Err(err) => {
+                        eprintln!("Error scanning file: {}", err);
+                        continue;
+                    }
+                }
+            }
         }
         None => {
-            eprintln!("SweepPC could't find a temp/cache dir.")
+            eprintln!("SweepPC couldn't find a temp/cache dir.");
         }
     }
 
