@@ -9,6 +9,10 @@ pub fn run_cleanup() {
         "Looking for large and old files".green(),
         "(>100 MB and over a year old)".italic().green()
     );
+    println!(
+        "{} 🗄️",
+        "Looking for duplicate files".green()
+    );
 
     let results = framework::scanner::scan_all();
 

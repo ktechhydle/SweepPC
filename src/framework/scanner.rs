@@ -54,7 +54,7 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
         None => {
             eprintln!(
                 "{} 😔",
-                "I couldn't find the specified directory to search".red()
+                "A specified directory was not found".red()
             );
         }
     }
