@@ -1,12 +1,16 @@
+use colored::Colorize;
 use std::env;
 use std::fs;
 use std::io;
 use std::path::PathBuf;
-use colored::Colorize;
+use std::time::{Duration, SystemTime};
 use walkdir::WalkDir;
 
 pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>> {
     let mut results = Vec::new();
+    let one_year = Duration::from_secs(365 * 24 * 60 * 60); // roughly one year
+    let now = SystemTime::now();
+    let one_year_ago = now.checked_sub(one_year).expect("Time went backwards");
 
     match dir {
         Some(dir_path) => {
@@ -22,12 +26,22 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
                             let max_size = 100 * 1000 * 1000;
 
                             if metadata.len() > max_size {
-                                if let Some(path_str) = path.to_str() {
-                                    results.push(path_str.to_string());
+                                if let Ok(modified_time) = metadata.modified() {
+                                    if modified_time < one_year_ago {
+                                        if let Some(path_str) = path.to_str() {
+                                            results.push(path_str.to_string());
+                                        }
+                                    }
+                                } else {
+                                    eprintln!(
+                                        "{} Could not get modified time for: {}",
+                                        "Warning:".yellow(),
+                                        path.display()
+                                    );
                                 }
                             }
                         } else {
-                            continue
+                            continue;
                         }
                     }
                     Err(err) => {
@@ -38,7 +52,10 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
             }
         }
         None => {
-            eprintln!("{} 😔", "I couldn't find the specified directory to search".red());
+            eprintln!(
+                "{} 😔",
+                "I couldn't find the specified directory to search".red()
+            );
         }
     }
 
@@ -61,7 +78,7 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
                         eprintln!("{} ❌", "SweepPC Unknown Error".red());
                     }
                 } else {
-                    continue
+                    continue;
                 }
             }
             Err(err) => {

@@ -1,7 +1,7 @@
-use std::io;
-use std::fs;
-use colored::Colorize;
 use crate::framework;
+use colored::Colorize;
+use std::fs;
+use std::io;
 
 pub fn evaluate_results(results: io::Result<Vec<String>>) {
     match results {
@@ -10,7 +10,11 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
                 let mut displayed_results = String::new();
 
                 for result in &found_files {
-                    displayed_results.push_str(&format!("{} {}\n", "File:".italic().cyan(), result));
+                    displayed_results.push_str(&format!(
+                        "{} {}\n",
+                        "File:".italic().cyan(),
+                        result
+                    ));
                 }
 
                 if !displayed_results.is_empty() {
@@ -32,7 +36,10 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
                     }
                 }
             } else {
-                println!("{}", "SweepPC didn't find any files, your computer is clean 😊".white())
+                println!(
+                    "{}",
+                    "SweepPC didn't find any files, your computer is clean 😊".white()
+                )
             }
         }
         Err(e) => eprintln!("{} {}", "Error scanning directory:".red(), e),

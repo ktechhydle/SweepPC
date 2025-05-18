@@ -1,5 +1,5 @@
-use std::env;
 use colored::Colorize;
+use std::env;
 use sweeppc::{run_cleanup, run_cleanup_on_dir, run_cleanup_on_temp};
 
 fn main() {
@@ -21,8 +21,18 @@ fn main() {
         }
     } else {
         println!("\n{}", "SweepPC Version 1.0".green().bold());
-        println!("{}\n", "See https://github.com/ktechhydle/SweepPC for command usage".italic().blue());
-        println!("{} {} ... {}", "Usage -> sweeppc".yellow().bold(), "[command]".green(), "[arg]".green());
+        println!(
+            "{}\n",
+            "See https://github.com/ktechhydle/SweepPC for command usage"
+                .italic()
+                .blue()
+        );
+        println!(
+            "{} {} ... {}",
+            "Usage -> sweeppc".yellow().bold(),
+            "[command]".green(),
+            "[arg]".green()
+        );
         println!("{}", "Commands:".white());
         println!("  run             Run a default cleanup");
         println!("  runtarget [dir] Run a cleanup on a specific directory");

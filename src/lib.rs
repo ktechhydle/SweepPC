@@ -1,10 +1,14 @@
-use std::path::PathBuf;
 use colored::Colorize;
+use std::path::PathBuf;
 mod framework;
 
 pub fn run_cleanup() {
     println!("{}", "Running default cleanup 🏃‍♂️‍➡️".purple());
-    println!("{} {} 👴", "Looking for large and old files".green(), "(>100 MB and over a year old)".italic().green());
+    println!(
+        "{} {} 👴",
+        "Looking for large and old files".green(),
+        "(>100 MB and over a year old)".italic().green()
+    );
 
     let results = framework::scanner::scan_all();
 

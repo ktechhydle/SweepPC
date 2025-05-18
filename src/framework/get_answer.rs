@@ -1,5 +1,5 @@
-use std::io::{self, Write};
 use colored::Colorize;
+use std::io::{self, Write};
 
 pub fn get_yes_or_no(prompt: &str) -> bool {
     loop {
