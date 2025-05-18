@@ -16,13 +16,18 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
                 match entry {
                     Ok(entry) => {
                         let path = entry.path();
-                        let metadata = fs::metadata(&path)?;
-                        let max_size = 100 * 1000 * 1000;
 
-                        if metadata.len() > max_size {
-                            if let Some(path_str) = path.to_str() {
-                                results.push(path_str.to_string());
+                        if path.is_file() {
+                            let metadata = fs::metadata(&path)?;
+                            let max_size = 100 * 1000 * 1000;
+
+                            if metadata.len() > max_size {
+                                if let Some(path_str) = path.to_str() {
+                                    results.push(path_str.to_string());
+                                }
                             }
+                        } else {
+                            continue
                         }
                     }
                     Err(err) => {
@@ -48,10 +53,15 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
         match entry {
             Ok(entry) => {
                 let path = entry.path().to_path_buf();
-                if let Some(file_name) = path.to_str() {
-                    results.push(file_name.to_string());
+
+                if path.is_file() {
+                    if let Some(file_name) = path.to_str() {
+                        results.push(file_name.to_string());
+                    } else {
+                        eprintln!("{} ❌", "SweepPC Unknown Error".red());
+                    }
                 } else {
-                    eprintln!("{} ❌", "SweepPC Unknown Error".red());
+                    continue
                 }
             }
             Err(err) => {
