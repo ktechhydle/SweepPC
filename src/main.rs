@@ -9,7 +9,7 @@ fn main() {
         let commands: Vec<String> = args.collect();
 
         if commands[1] == "run" {
-            run_cleanup()
+            run_cleanup();
         } else if commands[1] == "runtarget" {
             if commands.len() > 2 {
                 run_cleanup_on_dir(&commands[2])
@@ -34,8 +34,18 @@ fn main() {
             "[arg]".green()
         );
         println!("{}", "Commands:".white());
-        println!("  run             Run a default cleanup");
-        println!("  runtarget [dir] Run a cleanup on a specific directory");
-        println!("  cleantemp       Cleanup temp files and caches");
+        println!("{}", "  run             Run a default cleanup".italic());
+        println!(
+            "{}",
+            "  runtarget [dir] Run a cleanup on a specific directory".italic()
+        );
+        println!(
+            "{}",
+            "  cleantemp       Cleanup temp files and caches".italic()
+        );
+        println!(
+            "\n{}",
+            "Before using this command, make sure to close any open programs!".red()
+        );
     }
 }

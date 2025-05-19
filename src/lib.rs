@@ -9,10 +9,8 @@ pub fn run_cleanup() {
         "Looking for large and old files".green(),
         "(>100 MB and over a year old)".italic().green()
     );
-    println!(
-        "{} 🗄️",
-        "Looking for duplicate files".green()
-    );
+    println!("{} 🗄️", "Looking for duplicate files".green());
+    println!("{} 🗑️", "Looking for temporary files".green());
 
     let results = framework::scanner::scan_all();
 
@@ -28,6 +26,7 @@ pub fn run_cleanup_on_dir(dir: &String) {
 }
 
 pub fn run_cleanup_on_temp() {
+    println!("{}", "Running temporary cleanup 🏃‍♂️‍➡️".purple());
     let results = framework::scanner::scan_temps();
 
     framework::evaluate::evaluate_results(results);

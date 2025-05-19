@@ -14,7 +14,11 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
 
     match dir {
         Some(dir_path) => {
-            println!("{} {:?} 🔎", "Searching".white(), &dir_path);
+            println!(
+                "{} {:?} 🔎",
+                "Searching".white(),
+                &dir_path.to_string_lossy().to_string()
+            );
 
             for entry in WalkDir::new(&dir_path) {
                 match entry {
@@ -52,10 +56,7 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
             }
         }
         None => {
-            eprintln!(
-                "{} 😔",
-                "A specified directory was not found".red()
-            );
+            eprintln!("{} 😔", "A specified directory was not found".red());
         }
     }
 
@@ -65,6 +66,12 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
 pub fn scan_temps() -> io::Result<Vec<String>> {
     let mut results = Vec::new();
     let temp_dir = env::temp_dir();
+
+    println!(
+        "{} {:?} 🔎",
+        "Searching".white(),
+        &temp_dir.to_string_lossy().to_string()
+    );
 
     for entry in WalkDir::new(&temp_dir) {
         match entry {
@@ -101,6 +108,7 @@ pub fn scan_all() -> io::Result<Vec<String>> {
         scan_large_and_old_files(dirs::video_dir()),
         scan_large_and_old_files(dirs::picture_dir()),
         scan_large_and_old_files(dirs::audio_dir()),
+        scan_temps(),
     ];
 
     for result in sources {

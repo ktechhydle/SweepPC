@@ -19,8 +19,10 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
 
                 if !displayed_results.is_empty() {
                     println!(
-                        "{} \n\n{}",
-                        "SweepPC found the following results:".white().green(),
+                        "\n{} {} {} \n\n{}",
+                        "SweepPC found".bold().green(),
+                        found_files.len().to_string().bold().green(),
+                        "result(s)".bold().green(),
                         displayed_results
                     );
 
