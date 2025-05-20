@@ -7,56 +7,50 @@ use std::time::{Duration, SystemTime};
 use walkdir::WalkDir;
 
 pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>> {
-    let mut results = Vec::new();
+    let dir_path = match dir {
+        Some(p) => p,
+        None => {
+            eprintln!("{} 😔", "A specified directory was not found".red());
+            return Ok(Vec::new());
+        }
+    };
+
     let one_year = Duration::from_secs(365 * 24 * 60 * 60); // roughly one year
     let now = SystemTime::now();
     let one_year_ago = now.checked_sub(one_year).expect("Time went backwards");
+    let mut entries = WalkDir::new(&dir_path).into_iter();
+    let mut results = Vec::new();
 
-    match dir {
-        Some(dir_path) => {
-            println!(
-                "{} {:?} 🔎",
-                "Searching".white(),
-                &dir_path.to_string_lossy().to_string()
-            );
+    println!(
+        "{} {:?} 🔎",
+        "Searching".white(),
+        &dir_path.to_string_lossy().to_string().replace("\\", "/")
+    );
 
-            for entry in WalkDir::new(&dir_path) {
-                match entry {
-                    Ok(entry) => {
-                        let path = entry.path();
+    while let Some(Ok(entry)) = entries.next() {
+        let path = entry.path();
 
-                        if path.is_file() {
-                            let metadata = fs::metadata(&path)?;
-                            let max_size = 100 * 1000 * 1000;
+        if path.is_file() {
+            let metadata = fs::metadata(&path)?;
+            let max_size = 100 * 1000 * 1000;
 
-                            if metadata.len() > max_size {
-                                if let Ok(modified_time) = metadata.modified() {
-                                    if modified_time < one_year_ago {
-                                        if let Some(path_str) = path.to_str() {
-                                            results.push(path_str.to_string());
-                                        }
-                                    }
-                                } else {
-                                    eprintln!(
-                                        "{} Could not get modified time for: {}",
-                                        "Warning:".yellow(),
-                                        path.display()
-                                    );
-                                }
-                            }
-                        } else {
-                            continue;
+            if metadata.len() > max_size {
+                if let Ok(modified_time) = metadata.modified() {
+                    if modified_time < one_year_ago {
+                        if let Some(path_str) = path.to_str() {
+                            results.push(path_str.to_string());
                         }
                     }
-                    Err(err) => {
-                        eprintln!("{} {}", "Error scanning file:".red(), err.to_string().red());
-                        continue;
-                    }
+                } else {
+                    eprintln!(
+                        "{} {}",
+                        "Could not get modified time for ".red(),
+                        path.to_string_lossy().to_string().replace("\\", "/")
+                    );
                 }
             }
-        }
-        None => {
-            eprintln!("{} 😔", "A specified directory was not found".red());
+        } else {
+            continue;
         }
     }
 
@@ -70,28 +64,18 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
     println!(
         "{} {:?} 🔎",
         "Searching".white(),
-        &temp_dir.to_string_lossy().to_string()
+        &temp_dir.to_string_lossy().to_string().replace("\\", "/")
     );
 
-    for entry in WalkDir::new(&temp_dir) {
-        match entry {
-            Ok(entry) => {
-                let path = entry.path().to_path_buf();
+    for entry in WalkDir::new(&temp_dir).into_iter().filter_map(Result::ok) {
+        let path = entry.path();
 
-                if path.is_file() {
-                    if let Some(file_name) = path.to_str() {
-                        results.push(file_name.to_string());
-                    } else {
-                        eprintln!("{} ❌", "SweepPC Unknown Error".red());
-                    }
-                } else {
-                    continue;
-                }
+        if path.is_file() {
+            if let Some(file_name) = path.to_str() {
+                results.push(file_name.to_string());
             }
-            Err(err) => {
-                eprintln!("{} {}", "Error scanning file:".red(), err.to_string().red());
-                continue;
-            }
+        } else {
+            continue;
         }
     }
 

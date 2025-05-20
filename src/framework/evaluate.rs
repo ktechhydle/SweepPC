@@ -13,7 +13,7 @@ pub fn evaluate_results(results: io::Result<Vec<String>>) {
                     displayed_results.push_str(&format!(
                         "{} {}\n",
                         "File:".italic().cyan(),
-                        result
+                        result.to_string().replace("\\", "/")
                     ));
                 }
 
