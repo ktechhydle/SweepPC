@@ -4,23 +4,7 @@
 It's time to take control of your Windows computer; keep it clean
 and running smooth with a command line tool.
 
-```shell
-> sweeppc run
-
-Running default cleanup 🏃‍♂️‍➡️
-Looking for large and old files (>100 MB and over a year old) 👴
-Looking for temporary files 🗑️
-Searching "C:/Users/JohnDoe/Desktop" 🔎
-Searching "C:/Users/JohnDoe/Documents" 🔎
-Searching "C:/Users/JohnDoe/Downloads" 🔎
-Searching "C:/Users/JohnDoe/Videos" 🔎
-Searching "C:/Users/JohnDoe/Pictures" 🔎
-Searching "C:/Users/JohnDoe/AppData/Local/Temp/" 🔎
-
-SweepPC found 1 result(s)
-
-File: C:/Users/JohnDoe/AppData/Local/Temp/A_VERY_LARGE_STORAGE_HOG.dll
-```
+<img src="resources/screenshots/sweep_pc_startup.png" width="auto">
 
 ## Overview
 SweepPC provides a simple command line tool allowing you to:
