@@ -44,7 +44,7 @@ fn main() {
             "  cleantemp       Cleanup temp files and caches".italic()
         );
         println!(
-            "\n{}",
+            "\n{}\n",
             "Before using this command, make sure to close any open programs!".red()
         );
     }
