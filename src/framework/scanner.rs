@@ -1,12 +1,12 @@
 use colored::Colorize;
 use std::env;
 use std::fs;
-use std::io;
+use std::io::Result;
 use std::path::PathBuf;
 use std::time::{Duration, SystemTime};
 use walkdir::WalkDir;
 
-pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>> {
+pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>> {
     let dir_path = match dir {
         Some(p) => p,
         None => {
@@ -57,9 +57,10 @@ pub fn scan_large_and_old_files(dir: Option<PathBuf>) -> io::Result<Vec<String>>
     Ok(results)
 }
 
-pub fn scan_temps() -> io::Result<Vec<String>> {
-    let mut results = Vec::new();
+pub fn scan_temps() -> Result<Vec<String>> {
     let temp_dir = env::temp_dir();
+    let mut results = Vec::new();
+    let mut entries = WalkDir::new(&temp_dir).into_iter();
 
     println!(
         "{} {:?} 🔎",
@@ -67,7 +68,7 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
         &temp_dir.to_string_lossy().to_string().replace("\\", "/")
     );
 
-    for entry in WalkDir::new(&temp_dir).into_iter().filter_map(Result::ok) {
+    while let Some(Ok(entry)) = entries.next() {
         let path = entry.path();
 
         if path.is_file() {
@@ -82,16 +83,16 @@ pub fn scan_temps() -> io::Result<Vec<String>> {
     Ok(results)
 }
 
-pub fn scan_all() -> io::Result<Vec<String>> {
+pub fn scan_all() -> Result<Vec<String>> {
     let mut combined_results = Vec::new();
 
     let sources = [
-        scan_large_and_old_files(dirs::desktop_dir()),
-        scan_large_and_old_files(dirs::document_dir()),
-        scan_large_and_old_files(dirs::download_dir()),
-        scan_large_and_old_files(dirs::video_dir()),
-        scan_large_and_old_files(dirs::picture_dir()),
-        scan_large_and_old_files(dirs::audio_dir()),
+        scan_through_files(dirs::desktop_dir()),
+        scan_through_files(dirs::document_dir()),
+        scan_through_files(dirs::download_dir()),
+        scan_through_files(dirs::video_dir()),
+        scan_through_files(dirs::picture_dir()),
+        scan_through_files(dirs::audio_dir()),
         scan_temps(),
     ];
 
