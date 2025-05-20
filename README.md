@@ -4,7 +4,7 @@
 It's time to take control of your Windows computer; keep it clean
 and running smooth with a command line tool.
 
-<img src="resources/screenshots/sweep_pc_startup.png" width="auto">
+<img src="resources/screenshots/sweep_pc_startup.png" width="auto" style="border-radius: 5px">
 
 ## Overview
 SweepPC provides a simple command line tool allowing you to:
