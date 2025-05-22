@@ -20,7 +20,7 @@ fn main() {
             run_cleanup_on_temp();
         }
     } else {
-        println!("\n{}", "SweepPC Version 1.0".green().bold());
+        println!("\n{}", "SweepPC Version 1.1".green().bold());
         println!(
             "{}\n",
             "See https://github.com/ktechhydle/SweepPC for command usage"
