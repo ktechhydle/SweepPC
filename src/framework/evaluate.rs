@@ -38,11 +38,11 @@ pub fn evaluate_results(results: Result<Vec<String>>) {
             for file in found_files {
                 let _ = fs::remove_file(file);
             }
-            println!("{}", "Deleted found files".green());
+            println!("\n{}\n", "Deleted found files ✅".green());
         }
     } else {
         println!(
-            "{}",
+            "\n{}\n",
             "SweepPC didn't find any files, your computer is clean 😊".white()
         )
     }
