@@ -1,29 +1,30 @@
-use colored::Colorize;
+use simply_colored::*;
 use std::env;
 use std::fs;
-use std::io::Result;
 use std::path::PathBuf;
 use std::time::{Duration, SystemTime};
 use walkdir::WalkDir;
 
-pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>> {
+pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>, String> {
     let dir_path = match dir {
         Some(p) => p,
         None => {
-            eprintln!("{} 😔", "A specified directory was not found".red());
-            return Ok(Vec::new());
+            return Err(
+                "⚠️  Warning: {DIM_RED}a specified directory was not found{RESET}".to_string(),
+            );
         }
     };
 
     let one_year = Duration::from_secs(365 * 24 * 60 * 60); // roughly one year
     let now = SystemTime::now();
-    let one_year_ago = now.checked_sub(one_year).expect("Time went backwards");
+    let one_year_ago = now
+        .checked_sub(one_year)
+        .expect("⚠️  Warning: {DIM_RED}time somehow went backwards?{RESET}");
     let mut entries = WalkDir::new(&dir_path).into_iter();
     let mut results = Vec::new();
 
     println!(
-        "{} {:?} 🔎",
-        "Searching".white(),
+        "🔎 Searching{BOLD} '{}'{RESET}",
         &dir_path.to_string_lossy().to_string().replace("\\", "/")
     );
 
@@ -31,7 +32,8 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>> {
         let path = entry.path();
 
         if path.is_file() {
-            let metadata = fs::metadata(&path)?;
+            let metadata = fs::metadata(&path)
+                .expect("⚠️  Warning: {DIM_RED}file metadata couldn't be read{RESET}");
             let max_size = 100 * 1000 * 1000;
 
             if metadata.len() > max_size {
@@ -42,9 +44,8 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>> {
                         }
                     }
                 } else {
-                    eprintln!(
-                        "{} {}",
-                        "Could not get modified time for ".red(),
+                    println!(
+                        "⚠️  Warning: {DIM_RED}Could not get modified time for{RESET} {}",
                         path.to_string_lossy().to_string().replace("\\", "/")
                     );
                 }
@@ -57,14 +58,13 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>> {
     Ok(results)
 }
 
-pub fn scan_temps() -> Result<Vec<String>> {
+pub fn scan_temps() -> Result<Vec<String>, String> {
     let temp_dir = env::temp_dir();
     let mut results = Vec::new();
     let mut entries = WalkDir::new(&temp_dir).into_iter();
 
     println!(
-        "{} {:?} 🔎",
-        "Searching".white(),
+        "🔎 Searching {BOLD}'{}'{RESET}",
         &temp_dir.to_string_lossy().to_string().replace("\\", "/")
     );
 
@@ -83,7 +83,7 @@ pub fn scan_temps() -> Result<Vec<String>> {
     Ok(results)
 }
 
-pub fn scan_all() -> Result<Vec<String>> {
+pub fn scan_all() -> Result<Vec<String>, String> {
     let mut combined_results = Vec::new();
 
     let sources = [

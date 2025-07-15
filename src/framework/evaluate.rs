@@ -1,13 +1,13 @@
 use crate::framework;
-use colored::Colorize;
+use simply_colored::*;
 use std::fs;
-use std::io::Result;
 
-pub fn evaluate_results(results: Result<Vec<String>>) {
+pub fn evaluate_results(results: Result<Vec<String>, String>) {
     let found_files = match results {
-        Ok(p) => p,
-        Err(_) => {
-            eprintln!("{}", "A specified directory was not found".red());
+        Ok(files) => files,
+        Err(error) => {
+            println!("{}", error);
+
             Vec::new()
         }
     };
@@ -17,17 +17,19 @@ pub fn evaluate_results(results: Result<Vec<String>>) {
 
         for result in &found_files {
             displayed_results.push_str(&format!(
-                "{} {}\n",
-                "File:".italic().cyan(),
+                "📁 File {BOLD}'{}'{RESET}\n",
                 result.to_string().replace("\\", "/")
             ));
         }
 
         println!(
-            "\n{} {} {} \n\n{}",
-            "SweepPC found".bold().green(),
-            found_files.len().to_string().bold().green(),
-            "result(s)".bold().green(),
+            "\n🎉 {DIM_GREEN}{BOLD}SweepPC found {} {}{RESET}\n\n{}",
+            found_files.len().to_string(),
+            if found_files.len() > 1 {
+                "results"
+            } else {
+                "result"
+            },
             displayed_results
         );
 
@@ -38,12 +40,9 @@ pub fn evaluate_results(results: Result<Vec<String>>) {
             for file in found_files {
                 let _ = fs::remove_file(file);
             }
-            println!("\n{}\n", "Deleted found files ✅".green());
+            println!("\n✅ {DIM_GREEN}Deleted found files{RESET}\n");
         }
     } else {
-        println!(
-            "\n{}\n",
-            "SweepPC didn't find any files, your computer is clean 😊".white()
-        )
+        println!("\n😊 {DIM_WHITE}SweepPC didn't find any files, your computer is clean{RESET}\n")
     }
 }

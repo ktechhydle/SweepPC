@@ -1,51 +1,38 @@
-use colored::Colorize;
-use std::env;
+use clap::{CommandFactory, Parser, Subcommand};
 use sweeppc::{run_cleanup, run_cleanup_on_dir, run_cleanup_on_temp};
 
+#[derive(Parser)]
+#[command(name = "sweeppc", version = env!("CARGO_PKG_VERSION"), about = "SweepPC Cleaning Utility")]
+struct Cli {
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    #[command(about = "Run a default cleanup on your entire computer")]
+    Run,
+    #[command(about = "Run a cleanup on the specified directory")]
+    Runtarget { dir: String },
+    #[command(about = "Run a cleanup on your cache and temp directories")]
+    Cleantemp,
+}
+
 fn main() {
-    let args = env::args();
+    let cli = Cli::parse();
 
-    if args.len() > 1 {
-        let commands: Vec<String> = args.collect();
-
-        if commands[1] == "run" {
+    match cli.command {
+        Some(Commands::Run) => {
             run_cleanup();
-        } else if commands[1] == "runtarget" {
-            if commands.len() > 2 {
-                run_cleanup_on_dir(&commands[2])
-            } else {
-                println!("Usage: runtarget [dirname]")
-            }
-        } else if commands[1] == "cleantemp" {
+        }
+        Some(Commands::Runtarget { dir }) => {
+            run_cleanup_on_dir(&dir);
+        }
+        Some(Commands::Cleantemp) => {
             run_cleanup_on_temp();
         }
-    } else {
-        println!("\n{}", "SweepPC Version 1.1".green().bold());
-        println!(
-            "{}\n",
-            "See https://github.com/ktechhydle/SweepPC for command usage"
-                .italic()
-                .blue()
-        );
-        println!(
-            "{} {} ... {}",
-            "Usage -> sweeppc".yellow().bold(),
-            "[command]".green(),
-            "[arg]".green()
-        );
-        println!("{}", "Commands:".white());
-        println!("{}", "  run             Run a default cleanup".italic());
-        println!(
-            "{}",
-            "  runtarget [dir] Run a cleanup on a specific directory".italic()
-        );
-        println!(
-            "{}",
-            "  cleantemp       Cleanup temp files and caches".italic()
-        );
-        println!(
-            "\n{}\n",
-            "Before using this command, make sure to close any open programs!".red()
-        );
+        None => {
+            Cli::command().print_help().unwrap();
+        }
     }
 }

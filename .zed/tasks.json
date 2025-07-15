@@ -1,0 +1,18 @@
+[
+  {
+    "label": "Build SweepPC",
+    "command": "cargo build; target/debug/glang.exe"
+  },
+  {
+    "label": "Run SweepPC <run>",
+    "command": "cargo run -- run"
+  },
+  {
+    "label": "Run SweepPC <runtarget>",
+    "command": "cargo run -- runtarget target/"
+  },
+  {
+    "label": "Run SweepPC <cleantemp>",
+    "command": "cargo run -- cleantemp"
+  }
+]
