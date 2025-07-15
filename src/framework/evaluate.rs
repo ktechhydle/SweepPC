@@ -23,7 +23,7 @@ pub fn evaluate_results(results: Result<Vec<String>, String>) {
         }
 
         println!(
-            "\n🎉 {DIM_GREEN}{BOLD}SweepPC found {} {}{RESET}\n\n{}",
+            "🎉 {DIM_GREEN}{BOLD}SweepPC found {} {}{RESET}\n{}",
             found_files.len().to_string(),
             if found_files.len() > 1 {
                 "results"
@@ -33,16 +33,16 @@ pub fn evaluate_results(results: Result<Vec<String>, String>) {
             displayed_results
         );
 
-        let delete =
-            framework::get_answer::get_yes_or_no("Would you like to delete the found files?");
-
-        if delete {
+        if framework::get_answer::get_yes_or_no("Would you like to delete the found files?") {
             for file in found_files {
                 let _ = fs::remove_file(file);
             }
-            println!("\n✅ {DIM_GREEN}Deleted found files{RESET}\n");
+
+            println!("✅ {DIM_GREEN}Deleted found files{RESET}");
+        } else {
+            println!("✅ {DIM_GREEN}Process finished, thanks for using!{RESET}");
         }
     } else {
-        println!("\n😊 {DIM_WHITE}SweepPC didn't find any files, your computer is clean{RESET}\n")
+        println!("😊 {DIM_WHITE}SweepPC didn't find any files, your computer is clean{RESET}")
     }
 }

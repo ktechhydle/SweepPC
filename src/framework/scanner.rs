@@ -10,7 +10,7 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>, String> {
         Some(p) => p,
         None => {
             return Err(
-                "⚠️  Warning: {DIM_RED}a specified directory was not found{RESET}".to_string(),
+                "⚠️ Warning: {DIM_RED}a specified directory was not found{RESET}".to_string(),
             );
         }
     };
@@ -19,12 +19,12 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>, String> {
     let now = SystemTime::now();
     let one_year_ago = now
         .checked_sub(one_year)
-        .expect("⚠️  Warning: {DIM_RED}time somehow went backwards?{RESET}");
+        .expect("⚠️ Warning: {DIM_RED}time somehow went backwards?{RESET}");
     let mut entries = WalkDir::new(&dir_path).into_iter();
     let mut results = Vec::new();
 
     println!(
-        "🔎 Searching{BOLD} '{}'{RESET}",
+        "🔎 Searching {BOLD}'{}'{RESET}",
         &dir_path.to_string_lossy().to_string().replace("\\", "/")
     );
 
@@ -33,7 +33,7 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>, String> {
 
         if path.is_file() {
             let metadata = fs::metadata(&path)
-                .expect("⚠️  Warning: {DIM_RED}file metadata couldn't be read{RESET}");
+                .expect("⚠️ Warning: {DIM_RED}file metadata couldn't be read{RESET}");
             let max_size = 100 * 1000 * 1000;
 
             if metadata.len() > max_size {
@@ -45,7 +45,7 @@ pub fn scan_through_files(dir: Option<PathBuf>) -> Result<Vec<String>, String> {
                     }
                 } else {
                     println!(
-                        "⚠️  Warning: {DIM_RED}Could not get modified time for{RESET} {}",
+                        "⚠️ Warning: {DIM_RED}Could not get modified time for{RESET} {}",
                         path.to_string_lossy().to_string().replace("\\", "/")
                     );
                 }
